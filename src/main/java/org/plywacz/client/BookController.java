@@ -18,9 +18,9 @@ class BookController {
 
     @GetMapping()
     public Mono<Collection<ExtendedBook>> allExtendedBooks() {
-        log.always().log("allExtendedBooks: getting mono");
+        log.always().log("Thread comes to->allExtendedBooks: getting mono");
         Mono<Collection<ExtendedBook>> monoBooks = bookService.allExtendedBooks();
-        log.always().log("allExtendedBooks: returning mono");
+        log.always().log("Thread gets Mono and is released from allExtendedBooks: returning mono");
         return monoBooks;
     }
 }

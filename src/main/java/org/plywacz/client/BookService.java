@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import reactor.core.publisher.Mono;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -20,7 +21,8 @@ class BookService {
     Mono<Collection<ExtendedBook>> allExtendedBooks() {
         return bookClient
                 .fetchAllBooks()
-                .map(this::extendBooks);
+                .map(this::extendBooks)
+                .onErrorReturn(List.of(new ExtendedBook(null,"No books returned from api")));
     }
 
     private Collection<ExtendedBook> extendBooks(Collection<Book> books) {

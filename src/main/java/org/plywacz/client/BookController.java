@@ -2,12 +2,14 @@ package org.plywacz.client;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @RestController
+@CrossOrigin
 @RequestMapping("extendedBooks")
 @AllArgsConstructor
 @Log4j2

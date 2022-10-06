@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
-import java.util.Collection;
-
 @RestController
 @RequestMapping("extendedBooks")
 @AllArgsConstructor
@@ -17,9 +15,9 @@ class BookController {
     private final BookService bookService;
 
     @GetMapping()
-    public Mono<Collection<ExtendedBook>> allExtendedBooks() {
+    public Mono<ExtendedBookOutput> allExtendedBooks() {
         log.always().log("Thread comes to->allExtendedBooks: getting mono");
-        Mono<Collection<ExtendedBook>> monoBooks = bookService.allExtendedBooks();
+        Mono<ExtendedBookOutput> monoBooks = bookService.allExtendedBooks();
         log.always().log("Thread gets Mono and is released from allExtendedBooks: returning mono");
         return monoBooks;
     }

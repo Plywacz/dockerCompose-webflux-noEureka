@@ -6,9 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import reactor.core.publisher.Mono;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,11 +16,24 @@ class BookService {
     private final BookClient bookClient;
 
     @GetMapping()
-    Mono<Collection<ExtendedBook>> allExtendedBooks() {
-        return bookClient
-                .fetchAllBooks()
+    Mono<ExtendedBookOutput> allExtendedBooks() {
+        return bookClient.fetchAllBooks()
                 .map(this::extendBooks)
-                .onErrorReturn(List.of(new ExtendedBook(null,"No books returned from api")));
+                .map(this::createExtendedBookOutput)
+                .onErrorReturn(exc -> {
+                            log.error("error during extending books", exc);
+                            return true;
+                        },
+                        new ExtendedBookOutput(Optional.of("error during extending books"), List.of())
+                );
+    }
+
+    private ExtendedBookOutput createExtendedBookOutput(Collection<ExtendedBook> extendedBooks) {
+        if (extendedBooks.isEmpty()) {
+            return new ExtendedBookOutput(Optional.of("No books received from books rest api"), Collections.emptyList());
+        } else {
+            return new ExtendedBookOutput(Optional.empty(), extendedBooks);
+        }
     }
 
     private Collection<ExtendedBook> extendBooks(Collection<Book> books) {

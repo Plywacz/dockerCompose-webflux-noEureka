@@ -15,9 +15,9 @@ class BooksDataProvider {
 
     public BooksDataProvider() {
         books = new ArrayList<>();
-        books.add(new Book("Some Book", "Jan Nowak", 1992));
-        books.add(new Book("Another Book", "Miłosz Kowal", 2020));
-        books.add(new Book("Super Book", "Kamil Slup", 1988));
+        books.add(new Book("Some Book", 1));
+        books.add(new Book("Another Book", 2));
+        books.add(new Book("Super Book", 1988));
     }
 
     public Collection<Book> all() {

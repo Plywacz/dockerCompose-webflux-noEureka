@@ -1,7 +1,7 @@
 package org.plywacz.client;
 
-import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -11,10 +11,14 @@ import java.util.Collection;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 @Log4j2
 class BookClient {
     private final WebClient webClient;
+
+    BookClient(@Value("${booksProviderUrl}") String booksProviderUrl) {
+        this.webClient = WebClient.create(booksProviderUrl);
+    }
+
 
     Mono<Collection<Book>> fetchAllBooks() {
         return webClient

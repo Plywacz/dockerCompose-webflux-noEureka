@@ -13,13 +13,13 @@ import reactor.core.publisher.Mono;
 @RequestMapping("extendedBooks")
 @AllArgsConstructor
 @Log4j2
-class BookController {
-    private final BookService bookService;
+class ExtendedBooksController {
+    private final ExtendedBooksService extendedBooksService;
 
     @GetMapping()
     public Mono<ExtendedBookOutput> allExtendedBooks() {
         log.always().log("Thread comes to->allExtendedBooks: getting mono");
-        Mono<ExtendedBookOutput> monoBooks = bookService.allExtendedBooks();
+        Mono<ExtendedBookOutput> monoBooks = extendedBooksService.allExtendedBooks();
         log.always().log("Thread gets Mono and is released from allExtendedBooks: returning mono");
         return monoBooks;
     }

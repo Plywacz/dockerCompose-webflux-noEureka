@@ -12,12 +12,14 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 @Log4j2
-class BookService {
-    private final BookClient bookClient;
+class ExtendedBooksService {
+    private final BooksClient booksClient;
+
+    private final AuthorsClient authorsClient;
 
     @GetMapping()
     Mono<ExtendedBookOutput> allExtendedBooks() {
-        return bookClient.fetchAllBooks()
+        return booksClient.fetchAllBooks()
                 .map(this::extendBooks)
                 .map(this::createExtendedBookOutput)
                 .onErrorReturn(exc -> {

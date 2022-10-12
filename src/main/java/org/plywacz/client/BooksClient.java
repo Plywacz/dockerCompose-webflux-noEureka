@@ -12,22 +12,22 @@ import java.util.List;
 
 @Service
 @Log4j2
-class AuthorClient {
+class BooksClient {
     private final WebClient webClient;
 
-    AuthorClient(@Value("${booksProviderUrl}") String authorsProviderUrl) {
-        this.webClient = WebClient.create(authorsProviderUrl);
+    BooksClient(@Value("${booksProviderUrl}") String booksProviderUrl) {
+        this.webClient = WebClient.create(booksProviderUrl);
     }
 
 
-    Mono<Collection<Author>> fetchAllBooks() {
+    Mono<Collection<Book>> fetchAllBooks() {
         return webClient
                 .get()
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<Collection<Author>>() {
+                .bodyToMono(new ParameterizedTypeReference<Collection<Book>>() {
                 })
                 .onErrorReturn(error -> {
-                            log.error("Error during fetching data from Authors rest api", error);
+                            log.error("Error during fetching data from Books rest api", error);
                             return true;
                         },
                         List.of()

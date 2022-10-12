@@ -2,6 +2,7 @@ package org.plywacz.client;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import reactor.core.publisher.Mono;
@@ -19,8 +20,10 @@ class ExtendedBooksService {
 
     @GetMapping()
     Mono<ExtendedBookOutput> allExtendedBooks() {
+        val authorsMap = fetchAuthorsMap();
+
         return booksClient.fetchAllBooks()
-                .map(this::extendBooks)
+                .map(books -> extendBooks(books, authorsMap))
                 .map(this::createExtendedBookOutput)
                 .onErrorReturn(exc -> {
                             log.error("error during extending books", exc);
@@ -28,6 +31,15 @@ class ExtendedBooksService {
                         },
                         new ExtendedBookOutput(Optional.of("error during extending books"), List.of())
                 );
+    }
+
+    private Map<Long, Author> fetchAuthorsMap() {
+        val authorsList = authorsClient.fetchAllAuthors();
+
+        val authorIdAuthorMap = new HashMap<Long, Author>();
+        authorsList.forEach(author -> authorIdAuthorMap.put(author.id(), author));
+
+        return authorIdAuthorMap;
     }
 
     private ExtendedBookOutput createExtendedBookOutput(Collection<ExtendedBook> extendedBooks) {
@@ -38,14 +50,14 @@ class ExtendedBooksService {
         }
     }
 
-    private Collection<ExtendedBook> extendBooks(Collection<Book> books) {
+    private Collection<ExtendedBook> extendBooks(Collection<Book> books, Map<Long, Author> authors) {
         return books.stream()
-                .map(this::extendBook)
+                .map(book -> merge(book,authors))
                 .collect(Collectors.toList());
     }
 
-    private ExtendedBook extendBook(Book book) {
-        return new ExtendedBook(book, generateSomeExtendingData());
+    private ExtendedBook merge(Book book, Map<Long, Author> authors) {
+        return new ExtendedBook(book,authors.get(book.authorId()),generateSomeExtendingData());
     }
 
     private String generateSomeExtendingData() {

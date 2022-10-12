@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  client:
+    build: client/
+    ports:
+      - 2001:2001
+    depends_on:
+          - rest
+  rest:
+    build: rest/
+    ports:
+      - 1001:1001
